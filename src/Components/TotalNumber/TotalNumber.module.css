@@ -1,0 +1,9 @@
+.wrap {
+  margin: 0 auto;
+  text-align: right;
+}
+
+.number {
+  font-size: 14px;
+  font-weight: 700;
+}
