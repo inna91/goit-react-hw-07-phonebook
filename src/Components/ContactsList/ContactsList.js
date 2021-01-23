@@ -2,33 +2,39 @@ import PropTypes from 'prop-types';
 import ContactItem from '../ContactItem/ContactItem';
 import s from './ContactList.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-// import { useEffect } from 'react';
-// import * as contactsActions from '../../redux/contacts-actions';
-import { deleteContact } from '../../redux/contacts-operations';
-import { filteredContacts } from '../../redux/contacts-selectors';
+import { useEffect } from 'react';
+import Loader from '../Loader/Loader';
+import { deleteContact, fetchContacts } from '../../redux/contacts-operations';
+import { filteredContacts, getIsLoading } from '../../redux/contacts-selectors';
 
 const ContactsList = () => {
   const contactsByFilter = useSelector(filteredContacts);
+  const loadingContacts = useSelector(getIsLoading);
+
   const dispatch = useDispatch();
-  // const loadingContacts = useSelector(getIsLoading);
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const onDeleteContact = id => dispatch(deleteContact(id));
 
-  // useEffect(() => {
-  //   dispatch(fetchContacts());
-  // }, []);
-
   return (
-    <ul className={s.list}>
-      {contactsByFilter.map(({ id, name, number }) => (
-        <ContactItem
-          key={id}
-          name={name}
-          number={number}
-          deleteContact={() => onDeleteContact(id)}
-        />
-      ))}
-    </ul>
+    <>
+      {loadingContacts && <Loader />}
+      {!loadingContacts && contactsByFilter && contactsByFilter.length > 0 ? (
+        <ul className={s.list}>
+          {contactsByFilter.map(({ id, name, number }) => (
+            <ContactItem
+              key={id}
+              name={name}
+              number={number}
+              deleteContact={() => onDeleteContact(id)}
+            />
+          ))}
+        </ul>
+      ) : null}
+    </>
   );
 };
 

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import s from './Form.module.css';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from '../../redux/contacts-selectors';
-// import * as contactsActions from '../../redux/contacts-actions';
 import { addContact } from '../../redux/contacts-operations';
 
 export default function Form() {
@@ -38,27 +37,19 @@ export default function Form() {
     if (sameName) {
       alert(`${name} is already in your phonebook`);
     } else {
-      //  const contact = { id: name, name, number };
-      const contact = { name, number };
-      dispatch(addContact(contact));
+      dispatch(addContact({ name, number }));
     }
 
     if (contact === '') {
       return alert('Enter values');
     }
 
-    resetForm();
-    setName('');
-    setNumber('');
-  };
-
-  const resetForm = () => {
     setName('');
     setNumber('');
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={event => handleSubmit(event)}>
       <label className={s.label} htmlFor={name}>
         Name
         <input
@@ -91,9 +82,3 @@ export default function Form() {
     </form>
   );
 }
-
-// const mapDispatchToProps = dispatch => ({
-//   onSubmit: contact => dispatch(contactsActions.addContact(contact)),
-// });
-
-// export default connect(mapDispatchToProps)(Form);
